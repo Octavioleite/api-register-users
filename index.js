@@ -7,60 +7,39 @@ app.use(cors());
 
 const port = process.env.PORT || 3001;
 
-// Array para armazenar pautas
-const issues = [];
+const users = [];
 
-// Endpoint para obter todas as pautas
-app.get("/issues", (req, res) => {
-  return res.json(issues);
+app.get("/", (req, res) => {
+  return res.json("hello world");
 });
 
-// Endpoint para adicionar uma nova pauta
-app.post("/issues", (req, res) => {
-  const { title } = req.body;
+app.get("/users", (req, res) => {
+  return res.json(users); 
+});
 
-  const newIssue = {
-    id: Math.random().toString(36).substring(2, 9), // Gerar um ID único
-    title,
-    votesFor: 0,
-    votesAgainst: 0,
+app.post("/users", (req, res) => {
+  const { name, email } = req.body;
+
+  const newUser = {
+    id: Math.random().toString(36),
+    name,
+    email,
   };
 
-  issues.push(newIssue);
-  return res.json(newIssue);
+  users.push(newUser);
+  return res.json(newUser);
 });
 
-// Endpoint para votar em uma pauta
-app.post("/issues/:id/vote", (req, res) => {
-  const { id } = req.params;
-  const { vote } = req.body; // "for" ou "against"
-
-  const issue = issues.find((issue) => issue.id === id);
-  if (!issue) {
-    return res.status(404).json({ error: "Issue not found" });
-  }
-
-  if (vote === "for") {
-    issue.votesFor++;
-  } else if (vote === "against") {
-    issue.votesAgainst++;
-  } else {
-    return res.status(400).json({ error: "Invalid vote" });
-  }
-
-  return res.json(issue);
-});
-
-// Endpoint para deletar uma pauta
-app.delete("/issues/:id", (req, res) => {
+app.delete("/users/:id", (req, res) => {
   const { id } = req.params;
 
-  const index = issues.findIndex((issue) => issue.id === id);
+  const index = users.findIndex((user) => user.id === id);
+
   if (index < 0) {
-    return res.status(404).json({ error: "Issue not found" });
+    return res.status(404).json({ error });
   }
 
-  issues.splice(index, 1);
+  users.splice(index, 1);
   return res.status(204).json();
 });
 
