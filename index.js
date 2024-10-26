@@ -19,6 +19,10 @@ app.get("/pautas", (req, res) => {
 app.post("/pautas", (req, res) => {
   const { descricao } = req.body;
 
+  if (!descricao) {
+    return res.status(400).json({ error: "Descrição da pauta é obrigatória" });
+  }
+
   const newPauta = {
     id: Math.random().toString(36).substr(2, 9), // ID gerado aleatoriamente
     descricao,
@@ -26,13 +30,12 @@ app.post("/pautas", (req, res) => {
   };
 
   pautas.push(newPauta);
-  return res.json(newPauta);
+  return res.status(201).json(newPauta); // Retorna o novo objeto criado
 });
 
-// Endpoint para atualizar o número de votos de uma pauta
-app.put("/pautas/:id", (req, res) => {
+// Endpoint para votar em uma pauta
+app.put("/pautas/:id/votar", (req, res) => {
   const { id } = req.params;
-  const { votos } = req.body;
 
   const index = pautas.findIndex((pauta) => pauta.id === id);
 
@@ -40,20 +43,22 @@ app.put("/pautas/:id", (req, res) => {
     return res.status(404).json({ error: "Pauta não encontrada" });
   }
 
-  pautas[index].votos = votos; // Atualiza o número de votos
-  return res.json(pautas[index]);
+  pautas[index].votos += 1; // Incrementa o número de votos
+  return res.json(pautas[index]); // Retorna a pauta atualizada
 });
 
-app.get("/", (req, res) => {
-  return res.json("hello world");
-});
-
+// Endpoint para obter todos os usuários
 app.get("/users", (req, res) => {
   return res.json(users); 
 });
 
+// Endpoint para adicionar um novo usuário
 app.post("/users", (req, res) => {
   const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ error: "Nome e email são obrigatórios" });
+  }
 
   const newUser = {
     id: Math.random().toString(36).substr(2, 9), // ID gerado aleatoriamente
@@ -62,9 +67,10 @@ app.post("/users", (req, res) => {
   };
 
   users.push(newUser);
-  return res.json(newUser);
+  return res.status(201).json(newUser); // Retorna o novo objeto criado
 });
 
+// Endpoint para remover um usuário
 app.delete("/users/:id", (req, res) => {
   const { id } = req.params;
 
@@ -75,7 +81,7 @@ app.delete("/users/:id", (req, res) => {
   }
 
   users.splice(index, 1);
-  return res.status(204).json();
+  return res.status(204).json(); // Retorna status 204 sem conteúdo
 });
 
 app.listen(port, () => console.log(`listening on ${port}`));
