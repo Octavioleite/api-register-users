@@ -10,7 +10,7 @@ const port = process.env.PORT || 3001;
 const users = [];
 
 app.get("/", (req, res) => {
-  return res.json("hello world");
+  return res.json("API rodando");
 });
 
 app.get("/users", (req, res) => {
