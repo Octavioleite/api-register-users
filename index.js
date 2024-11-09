@@ -18,11 +18,13 @@ app.get("/users", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-  const { name, email } = req.body;
-
+  const { name, cpf, numberApto, email } = req.body;
+  console.log(name, cpf, numberApto, email);
   const newUser = {
     id: Math.random().toString(36),
     name,
+    cpf,
+    numberApto,
     email,
   };
 
