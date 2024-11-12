@@ -19,7 +19,7 @@ app.get("/users", (req, res) => {
 
 app.post("/users", (req, res) => {
   const { name, cpf, numberApto, email } = req.body;
-  console.log(name, cpf, numberApto, email);
+  console.log("Nome:", name, "CPF:", cpf, "Número da Unidade:", numberApto, "E-mail:", email);
   const newUser = {
     id: Math.random().toString(36),
     name,
